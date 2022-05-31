@@ -1,0 +1,24 @@
+---
+# Nieuwe Cloudstack VM instance
+- name: provision our VMs
+  hosts: cloudstack
+
+  tasks:
+    - name: Vars
+      include_vars:
+        file: vars.yml
+        name: var
+    - name: run all enclosed tasks from localhost
+      delegate_to: localhost
+      block:
+        - name: ensure VMs are created and running
+          cs_instance:
+            name: "{{ hostname }}"
+            template: CentOS 5.3(64-bit) no GUI
+            service_offering: Small
+            state: running
+            api_key: "{{ var.api_key }}"
+            api_secret: "{{ var.api_secret }}"
+            api_url: "{{ var.api_url }}"
+            zone: "{{ var.zone }}"
+            state: present
